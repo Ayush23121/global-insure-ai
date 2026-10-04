@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Global Insure-AI Pro | Final Version</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── Claude's Premium CSS (Minified for space) ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg-primary: #ffffff; --bg-secondary: #f5f5f4; --bg-tertiary: #efede8; --text-primary: #1a1a18; --text-secondary: #5f5e5a; --text-tertiary: #888780; --border-light: rgba(0,0,0,0.10); --border-mid: rgba(0,0,0,0.18); --radius-md: 8px; --radius-lg: 12px; --accent: #1D9E75; --accent-dark: #0F6E56; --accent-bg: #E1F5EE; --danger: #E24B4A; --danger-bg: #FCEBEB; --warn: #BA7517; --warn-bg: #FAEEDA; }
+    @media (prefers-color-scheme: dark) { :root { --bg-primary: #1c1c1a; --bg-secondary: #252522; --bg-tertiary: #111110; --text-primary: #f0ede8; --text-secondary: #a8a6a0; --text-tertiary: #6b6a65; --border-light: rgba(255,255,255,0.08); --border-mid: rgba(255,255,255,0.14); --accent-bg: #0a3326; --danger-bg: #2a1111; --warn-bg: #2a1e08; } }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg-tertiary); color: var(--text-primary); font-size: 14px; min-height: 100vh; }
+    .header { background: var(--bg-primary); border-bottom: 0.5px solid var(--border-light); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+    .header-brand { display: flex; align-items: center; gap: 10px; }
+    .header-logo { width: 34px; height: 34px; background: var(--accent); border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+    .brand-name { font-size: 15px; font-weight: 600; }
+    .brand-sub { font-size: 10px; color: var(--text-tertiary); font-family: 'DM Mono', monospace; text-transform: uppercase; }
+    .badge-model { background: var(--bg-secondary); border: 0.5px solid var(--border-light); border-radius: var(--radius-md); padding: 4px 10px; font-size: 11px; font-family: 'DM Mono', monospace; }
+    .app { padding: 1.5rem 2rem 3rem; max-width: 1100px; margin: 0 auto; }
+    .layout { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .card { background: var(--bg-primary); border: 0.5px solid var(--border-light); border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
+    .card-title { font-size: 10px; font-weight: 500; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.9px; font-family: 'DM Mono', monospace; margin-bottom: 1rem; display: flex; align-items: center; gap: 6px; }
+    .card-title-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .field-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 5px; display: block; }
+    select, input[type="text"], input[type="number"], input[type="range"] { width: 100%; padding: 8px; border-radius: var(--radius-md); border: 0.5px solid var(--border-mid); background: var(--bg-secondary); color: var(--text-primary); }
+    .radio-group { display: flex; gap: 8px; }
+    .radio-pill { flex: 1; padding: 7px 0; border: 0.5px solid var(--border-mid); border-radius: var(--radius-md); text-align: center; cursor: pointer; transition: 0.15s; }
+    .radio-pill.active { border-color: var(--accent); background: var(--accent-bg); color: var(--accent-dark); font-weight: 500; }
+    .bmi-display { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; padding: 12px; background: var(--bg-secondary); border-radius: var(--radius-md); }
+    .bmi-value { font-size: 20px; font-weight: 600; font-family: 'DM Mono', monospace; }
+    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .check-item { display: flex; align-items: center; gap: 8px; padding: 8px; border: 0.5px solid var(--border-light); border-radius: var(--radius-md); cursor: pointer; font-size: 12px; }
+    .check-item.active { border-color: var(--danger); background: var(--danger-bg); color: #A32D2D; }
+    .cta-btn { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: var(--radius-md); font-weight: 600; cursor: pointer; margin-top: 10px; }
+    .cta-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+    .metric { background: var(--bg-secondary); padding: 12px; border-radius: var(--radius-md); }
+    .metric-value { font-size: 20px; font-weight: 600; font-family: 'DM Mono', monospace; }
+    .dev-panel { background: #111; color: #0f0; padding: 15px; border-radius: 8px; font-family: 'DM Mono', monospace; margin-top: 10px; font-size: 12px; }
+    .hidden { display: none; }
+    .toggle-wrap { cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    <div class="header-logo">🛡️</div>
+    <div>
+      <div class="brand-name">Global Insure-AI</div>
+      <div class="brand-sub">Final Workshop Build</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:15px;align-items:center;">
+    <label class="toggle-wrap" id="devToggle">
+      <span>Dev Mode</span>
+      <input type="checkbox" id="devCheck" style="width:15px;height:15px;">
+    </label>
+    <div class="badge-model">FastAPI + Sklearn LR</div>
+  </div>
+</header>
+
+<main class="app">
+  <div class="layout">
+    <div class="card">
+      <div class="card-title"><span class="card-title-dot"></span>Step 1: Location & Demographic</div>
+      <div style="margin-bottom:15px">
+        <label class="field-label">Full Name</label>
+        <input type="text" id="fullName" placeholder="e.g. Ayush tiwari" autocomplete="name">
+      </div>
+      <div style="margin-bottom:15px">
+        <label class="field-label">Country</label>
+        <select id="country">
+          <option value="India" selected>India</option>
+          <option value="USA">USA</option>
+          <option value="United Kingdom">United Kingdom</option>
+          <option value="Canada">Canada</option>
+          <option value="Australia">Australia</option>
+          <option value="Germany">Germany</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Age: <span id="ageVal" style="color:var(--accent); font-weight:bold">25</span> yrs</label>
+        <input type="range" id="ageSlider" min="18" max="100" value="25">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-dot"></span>Step 2: Body Metrics</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px">
+        <div><label class="field-label">Weight (kg)</label><input type="number" id="weight" value="70" oninput="updateBMI()"></div>
+        <div><label class="field-label">Height (cm)</label><input type="number" id="height" value="175" oninput="updateBMI()"></div>
+      </div>
+      <div class="bmi-display">
+        <span style="font-size:12px; color:var(--text-tertiary)">Calculated BMI (client preview)</span>
+        <span class="bmi-value" id="bmiVal">22.9</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-dot"></span>Step 3: Lifestyle & Habits</div>
+      <label class="field-label">Smoker?</label>
+      <div class="radio-group" style="margin-bottom:15px">
+        <div class="radio-pill active" id="smNo" onclick="setSmoker(0)">No</div>
+        <div class="radio-pill" id="smYes" onclick="setSmoker(1)">Yes</div>
+      </div>
+      <div>
+        <label class="field-label">Workout: <span id="wdVal" style="color:var(--accent); font-weight:bold">3</span> days/week</label>
+        <input type="range" id="wdSlider" min="0" max="7" value="3">
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="card-title-dot"></span>Step 4: Medical History</div>
+      <div class="checkbox-grid">
+        <div class="check-item" id="c_diabetes" onclick="toggleCheck('c_diabetes')">Diabetes</div>
+        <div class="check-item" id="c_heart" onclick="toggleCheck('c_heart')">Heart Issue</div>
+        <div class="check-item" id="c_lung" onclick="toggleCheck('c_lung')">Lung Issue</div>
+        <div class="check-item" id="c_surgery" onclick="toggleCheck('c_surgery')">Surgery (12m)</div>
+      </div>
+    </div>
+
+    <div style="grid-column: 1/-1">
+      <button class="cta-btn" id="predictBtn" onclick="predict()">🚀 GENERATE RISK REPORT</button>
+    </div>
+
+    <div id="devPanel" class="dev-panel hidden" style="grid-column: 1/-1">
+      <div>[SYSTEM DIAGNOSTICS - ADMIN ONLY]</div>
+      <div id="devMetrics" style="margin-top:10px; display:grid; grid-template-columns: repeat(3, 1fr); gap:15px"></div>
+    </div>
+
+    <div id="resultCard" class="card full-width hidden" style="grid-column: 1/-1; border: 2px solid var(--accent)">
+      <div class="card-title"><span class="card-title-dot"></span>Prediction Result</div>
+      <div id="resultForName" style="font-size:13px; color:var(--text-tertiary); margin-bottom:10px"></div>
+      <div class="results-grid">
+        <div class="metric"><div class="field-label">Global (USD)</div><div class="metric-value" id="resUSD"></div></div>
+        <div class="metric"><div class="field-label">Local (INR)</div><div class="metric-value" id="resINR" style="color:var(--accent)"></div></div>
+        <div class="metric"><div class="field-label">Risk Tier</div><div class="metric-value" id="resRisk"></div></div>
+      </div>
+      <div style="margin-top:20px; padding:15px; background:var(--bg-secondary); border-radius:8px">
+        <div id="aiAdvice" style="font-size:13px; color:var(--text-secondary)"></div>
+      </div>
+      <button class="cta-btn" id="downloadBtn" onclick="downloadReport()" style="background:var(--accent-dark)">
+        📄 DOWNLOAD PDF REPORT
+      </button>
+    </div>
+  </div>
+</main>
+
+<script>
+  // ──────────────────────────────────────────────────────────────
+  // CONFIG
+  // ──────────────────────────────────────────────────────────────
+  // Base URL of the FastAPI backend (see main.py). Change this if you
+  // deploy the API somewhere other than localhost.
+  const API_BASE_URL = "http://127.0.0.1:8000";
+
+  // ──────────────────────────────────────────────────────────────
+  // LOCAL UI STATE (kept purely for interactivity — the actual
+  // pricing math now lives server-side in main.py)
+  // ──────────────────────────────────────────────────────────────
+  let smokerStatus = 0;
+  let medical = { c_diabetes: false, c_heart: false, c_lung: false, c_surgery: false };
+
+  // Stores the exact payload used for the last successful prediction, so
+  // the PDF report always reflects what's currently on screen.
+  let lastPayload = null;
+
+  function setSmoker(val) {
+    smokerStatus = val;
+    document.getElementById('smNo').classList.toggle('active', val === 0);
+    document.getElementById('smYes').classList.toggle('active', val === 1);
+  }
+
+  function toggleCheck(id) {
+    medical[id] = !medical[id];
+    document.getElementById(id).classList.toggle('active', medical[id]);
+  }
+
+  // Client-side BMI preview only — the backend recomputes BMI itself
+  // from raw weight/height so it never trusts a client-calculated value.
+  function updateBMI() {
+    const w = +document.getElementById('weight').value;
+    const h = +document.getElementById('height').value / 100;
+    if (h > 0) {
+      const bmi = (w / (h * h)).toFixed(1);
+      document.getElementById('bmiVal').innerText = bmi;
+    }
+  }
+
+  document.getElementById('ageSlider').oninput = function() { document.getElementById('ageVal').innerText = this.value; }
+  document.getElementById('wdSlider').oninput = function() { document.getElementById('wdVal').innerText = this.value; }
+
+  // ──────────────────────────────────────────────────────────────
+  // PREDICT — now calls the FastAPI backend instead of computing
+  // the premium in the browser.
+  // ──────────────────────────────────────────────────────────────
+  async function predict() {
+    const btn = document.getElementById('predictBtn');
+    const originalLabel = btn.innerText;
+
+    const fullName = document.getElementById('fullName').value.trim();
+    if (!fullName) {
+      alert("Please enter the applicant's full name before generating a report.");
+      document.getElementById('fullName').focus();
+      return;
+    }
+
+    const payload = {
+      name: fullName,
+      country: document.getElementById('country').value,
+      age: +document.getElementById('ageSlider').value,
+      weight_kg: +document.getElementById('weight').value,
+      height_cm: +document.getElementById('height').value,
+      smoker: smokerStatus === 1,
+      workout_days: +document.getElementById('wdSlider').value,
+      diabetes: medical.c_diabetes,
+      heart_issue: medical.c_heart,
+      lung_issue: medical.c_lung,
+      recent_surgery: medical.c_surgery,
+    };
+
+    btn.disabled = true;
+    btn.innerText = "⏳ Calculating...";
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/predict`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errBody = await response.json().catch(() => ({}));
+        throw new Error(errBody.detail || `Server responded with ${response.status}`);
+      }
+
+      const data = await response.json();
+      lastPayload = payload; // remember exactly what produced this result
+      renderResult(data);
+    } catch (err) {
+      console.error("Prediction request failed:", err);
+      alert(
+        "⚠️ Could not reach the Global Insure-AI backend.\n\n" +
+        "Please make sure the FastAPI server is running at " + API_BASE_URL +
+        " (start it with: uvicorn main:app --reload --port 8000).\n\n" +
+        "Details: " + err.message
+      );
+    } finally {
+      btn.disabled = false;
+      btn.innerText = originalLabel;
+    }
+  }
+
+  function renderResult(data) {
+    // Keep the BMI preview in sync with the server's authoritative value
+    document.getElementById('bmiVal').innerText = data.bmi;
+    document.getElementById('resultForName').innerText = `Report for ${data.applicant_name}`;
+
+    document.getElementById('resultCard').classList.remove('hidden');
+    document.getElementById('resUSD').innerText =
+      `$${data.price_usd.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+    document.getElementById('resINR').innerText =
+      `₹${data.price_inr.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+    document.getElementById('resRisk').innerText = data.risk_tier;
+
+    document.getElementById('aiAdvice').innerHTML =
+      `💡 <strong>AI Consultant:</strong> ${data.ai_advice}`;
+
+    // Dev panel — now fed directly from the backend's debug payload
+    if (document.getElementById('devCheck').checked) {
+      document.getElementById('devPanel').classList.remove('hidden');
+      document.getElementById('devMetrics').innerHTML = `
+        <div>RAW ML: $${data.raw_ml_estimate.toFixed(2)}</div>
+        <div>RISK MULT: ${data.risk_multiplier.toFixed(2)}x</div>
+        <div>GEO MULT: ${data.geo_multiplier}</div>
+        <div>MODEL SRC: ${data.debug ? data.debug.model_source : "n/a"}</div>
+        <div>INT. TERM: ${data.debug ? data.debug.age_smoker_interaction : "n/a"}</div>
+      `;
+    } else {
+      document.getElementById('devPanel').classList.add('hidden');
+    }
+
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+  }
+
+  // ──────────────────────────────────────────────────────────────
+  // DOWNLOAD PDF REPORT — re-sends the last payload to the backend,
+  // which recomputes the result server-side (source of truth) and
+  // streams back a PDF file for the browser to save.
+  // ──────────────────────────────────────────────────────────────
+  async function downloadReport() {
+    if (!lastPayload) {
+      alert("Please generate a risk report first.");
+      return;
+    }
+
+    const btn = document.getElementById('downloadBtn');
+    const originalLabel = btn.innerText;
+    btn.disabled = true;
+    btn.innerText = "⏳ Preparing PDF...";
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/report/pdf`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(lastPayload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`);
+      }
+
+      // Convert the streamed PDF into a downloadable blob
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      // Pull the suggested filename from the Content-Disposition header,
+      // falling back to a timestamped default if it's missing.
+      const disposition = response.headers.get("Content-Disposition") || "";
+      const match = disposition.match(/filename="?([^"]+)"?/);
+      const filename = match ? match[1] : `Global-Insure-AI-Report-${Date.now()}.pdf`;
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("PDF download failed:", err);
+      alert(
+        "⚠️ Could not generate the PDF report.\n\n" +
+        "Please make sure the FastAPI backend is running at " + API_BASE_URL +
+        ".\n\nDetails: " + err.message
+      );
+    } finally {
+      btn.disabled = false;
+      btn.innerText = originalLabel;
+    }
+  }
+</script>
+</body>
+</html>

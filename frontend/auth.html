@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign in — Global Insure-AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-void:#0A1714;
+    --bg-void-2:#0E211C;
+    --glow:#1D9E75;
+    --glass:rgba(255,255,255,0.055);
+    --glass-border:rgba(255,255,255,0.12);
+    --text-hi:#F1F5F3;
+    --text-lo:#93A69E;
+    --accent:#22B58A;
+    --accent-dark:#178E6C;
+    --danger:#F0665F;
+    --danger-bg:rgba(240,102,95,0.12);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:'DM Sans', sans-serif;
+    background:
+      radial-gradient(60% 50% at 18% 12%, rgba(29,158,117,0.20) 0%, transparent 60%),
+      radial-gradient(50% 45% at 85% 82%, rgba(29,158,117,0.14) 0%, transparent 60%),
+      linear-gradient(180deg, var(--bg-void) 0%, var(--bg-void-2) 100%);
+    color:var(--text-hi);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+  }
+  .mono{font-family:'DM Mono', monospace}
+
+  /* ---------- Card ---------- */
+  .card{
+    width:100%;
+    max-width:404px;
+    background:var(--glass);
+    border:1px solid var(--glass-border);
+    border-radius:20px;
+    backdrop-filter:blur(20px) saturate(140%);
+    -webkit-backdrop-filter:blur(20px) saturate(140%);
+    box-shadow:0 24px 60px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+    padding:32px 28px 26px;
+    opacity:0;
+    transform:translateY(14px) scale(0.985);
+    animation:cardIn 0.6s cubic-bezier(.16,1,.3,1) forwards;
+  }
+  @keyframes cardIn{ to{ opacity:1; transform:translateY(0) scale(1); } }
+
+  .logo-mark{
+    width:38px;height:38px;border-radius:11px;
+    background:linear-gradient(135deg, var(--accent), var(--accent-dark));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 16px rgba(34,181,138,0.35);
+    flex-shrink:0;
+  }
+
+  /* ---------- Segmented tab ---------- */
+  .mode-toggle{
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--glass-border);
+    border-radius:12px;
+    padding:4px;
+  }
+  .mode-toggle button{
+    position:relative;
+    z-index:2;
+    background:transparent;
+    border:none;
+    padding:9px 0;
+    font-size:13.5px;
+    font-weight:500;
+    color:var(--text-lo);
+    cursor:pointer;
+    border-radius:9px;
+    transition:color .25s ease;
+  }
+  .mode-toggle button[aria-selected="true"]{ color:#08140F; }
+  .toggle-thumb{
+    position:absolute;
+    top:4px; left:4px;
+    width:calc(50% - 4px);
+    height:calc(100% - 8px);
+    background:linear-gradient(135deg, var(--accent), #3ED6A6);
+    border-radius:9px;
+    transition:transform .32s cubic-bezier(.65,0,.35,1);
+    z-index:1;
+    box-shadow:0 4px 14px rgba(34,181,138,0.35);
+  }
+  .mode-toggle[data-mode="signup"] .toggle-thumb{ transform:translateX(100%); }
+
+  /* ---------- Fields ---------- */
+  label.field-label{
+    display:block;
+    font-size:12.5px;
+    color:var(--text-lo);
+    margin-bottom:6px;
+  }
+  input.text-field{
+    width:100%;
+    background:rgba(255,255,255,0.045);
+    border:1px solid var(--glass-border);
+    color:var(--text-hi);
+    border-radius:11px;
+    padding:12px 14px;
+    font-size:14.5px;
+    outline:none;
+    transition:border-color .18s ease, background .18s ease;
+  }
+  input.text-field::placeholder{ color:#5C6D67; }
+  input.text-field:focus{
+    border-color:var(--accent);
+    background:rgba(255,255,255,0.07);
+  }
+  input.text-field[data-invalid="true"]{ border-color:var(--danger); }
+
+  .field-msg{
+    font-size:12px;
+    margin-top:6px;
+    min-height:16px;
+  }
+  .field-msg.error{ color:var(--danger); }
+
+  /* ---------- Buttons ---------- */
+  .btn-primary{
+    width:100%;
+    background:linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color:#06140F;
+    font-weight:600;
+    font-size:14.5px;
+    border:none;
+    border-radius:11px;
+    padding:12.5px 0;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:filter .15s ease, transform .1s ease;
+  }
+  .btn-primary:hover{ filter:brightness(1.07); }
+  .btn-primary:active{ transform:scale(0.98); }
+  .btn-primary:disabled{ opacity:.6; cursor:not-allowed; filter:none; transform:none; }
+
+  .btn-ghost{
+    background:transparent;
+    border:none;
+    color:var(--accent);
+    font-size:13px;
+    font-weight:500;
+    cursor:pointer;
+    padding:2px 4px;
+  }
+  .btn-ghost:disabled{ color:var(--text-lo); cursor:not-allowed; }
+
+  /* Visible keyboard focus everywhere */
+  button:focus-visible, input:focus-visible, a:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+    border-radius:8px;
+  }
+
+  .spinner{
+    width:16px;height:16px;
+    border:2px solid rgba(6,20,15,0.35);
+    border-top-color:#06140F;
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* ---------- Step transition ---------- */
+  .step{ transition:opacity .28s ease, transform .32s cubic-bezier(.16,1,.3,1); }
+  .step[data-active="false"]{
+    position:absolute;
+    opacity:0;
+    pointer-events:none;
+  }
+  .step-enter-right{ transform:translateX(18px); opacity:0; }
+  .step-enter-left{ transform:translateX(-18px); opacity:0; }
+  .step-settled{ transform:translateX(0); opacity:1; }
+
+  #stepsWrap{ position:relative; }
+
+  /* ---------- OTP boxes ---------- */
+  .otp-row{ display:flex; gap:9px; justify-content:space-between; }
+  .otp-box{
+    width:46px; height:54px;
+    text-align:center;
+    font-size:21px;
+    font-weight:500;
+    background:rgba(255,255,255,0.045);
+    border:1px solid var(--glass-border);
+    border-radius:11px;
+    color:var(--text-hi);
+    outline:none;
+    transition:border-color .15s ease, background .15s ease, transform .12s ease;
+  }
+  .otp-box:focus{
+    border-color:var(--accent);
+    background:rgba(255,255,255,0.08);
+    transform:translateY(-1px);
+  }
+  .otp-row[data-invalid="true"] .otp-box{
+    border-color:var(--danger);
+    animation:shake .32s ease;
+  }
+  @keyframes shake{
+    20%{ transform:translateX(-4px); } 40%{ transform:translateX(4px); }
+    60%{ transform:translateX(-3px); } 80%{ transform:translateX(3px); } 100%{ transform:translateX(0); }
+  }
+
+  /* ---------- Toasts ---------- */
+  #toastRegion{
+    position:fixed; top:20px; left:50%; transform:translateX(-50%);
+    display:flex; flex-direction:column; gap:8px; z-index:50; width:min(360px,90vw);
+  }
+  .toast{
+    display:flex; align-items:center; gap:10px;
+    padding:12px 14px;
+    border-radius:11px;
+    font-size:13px;
+    font-weight:500;
+    color:var(--text-hi);
+    background:rgba(20,30,27,0.92);
+    border:1px solid var(--glass-border);
+    backdrop-filter:blur(10px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.35);
+    animation:toastIn .28s cubic-bezier(.16,1,.3,1) forwards;
+  }
+  .toast[data-kind="success"]{ border-color:rgba(34,181,138,0.4); }
+  .toast[data-kind="error"]{ border-color:rgba(240,102,95,0.4); }
+  .toast .dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .toast[data-kind="success"] .dot{ background:var(--accent); }
+  .toast[data-kind="error"] .dot{ background:var(--danger); }
+  @keyframes toastIn{ from{ opacity:0; transform:translateY(-8px); } to{ opacity:1; transform:translateY(0); } }
+  .toast.leaving{ animation:toastOut .22s ease forwards; }
+  @keyframes toastOut{ to{ opacity:0; transform:translateY(-8px); } }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<div id="toastRegion" aria-live="polite" aria-atomic="true"></div>
+
+<main class="card">
+
+  <!-- Brand -->
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:22px;">
+    <div class="logo-mark">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 5.5V11c0 5.2 3.4 9.9 8 11 4.6-1.1 8-5.8 8-11V5.5L12 2z" fill="#0A1714"/></svg>
+    </div>
+    <div>
+      <div style="font-size:14.5px;font-weight:600;">Global Insure-AI</div>
+      <div style="font-size:11px;color:var(--text-lo);">Secure access</div>
+    </div>
+  </div>
+
+  <!-- Mode toggle -->
+  <div class="mode-toggle" id="modeToggle" data-mode="signin" role="tablist" aria-label="Choose sign in or sign up">
+    <span class="toggle-thumb" aria-hidden="true"></span>
+    <button type="button" role="tab" id="tabSignin" aria-selected="true" aria-controls="stepsWrap" onclick="setMode('signin')">Sign In</button>
+    <button type="button" role="tab" id="tabSignup" aria-selected="false" aria-controls="stepsWrap" onclick="setMode('signup')">Sign Up</button>
+  </div>
+
+  <p id="modeSubtitle" style="font-size:13px;color:var(--text-lo);margin:16px 2px 20px;">
+    Sign in to view your saved risk reports.
+  </p>
+
+  <div id="stepsWrap">
+
+    <!-- STEP 1: Email -->
+    <form id="stepEmail" class="step step-settled" data-active="true" novalidate>
+      <label class="field-label" for="emailInput">Email address</label>
+      <input
+        class="text-field"
+        type="email"
+        id="emailInput"
+        placeholder="you@example.com"
+        autocomplete="email"
+        inputmode="email"
+        tabindex="1"
+      />
+      <div class="field-msg error" id="emailError" role="alert"></div>
+
+      <button type="submit" class="btn-primary" id="sendOtpBtn" style="margin-top:6px;" tabindex="2">
+        <span id="sendOtpLabel">Send OTP</span>
+      </button>
+    </form>
+
+    <!-- STEP 2: OTP -->
+    <form id="stepOtp" class="step" data-active="false" novalidate style="position:absolute;top:0;left:0;right:0;">
+      <p style="font-size:13px;color:var(--text-lo);margin:0 0 18px;line-height:1.5;">
+        Enter the 6-digit code sent to <span id="otpEmailDisplay" class="mono" style="color:var(--text-hi);"></span>
+        &nbsp;<button type="button" class="btn-ghost" id="editEmailBtn" tabindex="7">Edit</button>
+      </p>
+
+      <div class="otp-row mono" id="otpRow" role="group" aria-label="6-digit one-time passcode">
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-idx="0" tabindex="3" aria-label="Digit 1">
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-idx="1" tabindex="3" aria-label="Digit 2">
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-idx="2" tabindex="3" aria-label="Digit 3">
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-idx="3" tabindex="3" aria-label="Digit 4">
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-idx="4" tabindex="3" aria-label="Digit 5">
+        <input class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]*" data-idx="5" tabindex="3" aria-label="Digit 6">
+      </div>
+      <div class="field-msg error" id="otpError" role="alert" style="text-align:center;"></div>
+
+      <div style="display:flex;justify-content:center;margin:6px 0 18px;font-size:12.5px;color:var(--text-lo);">
+        <span id="resendIdle">Resend code in <span class="mono" id="resendTimer">0:60</span></span>
+        <button type="button" class="btn-ghost" id="resendBtn" style="display:none;" tabindex="5">Resend code</button>
+      </div>
+
+      <button type="submit" class="btn-primary" id="verifyBtn" tabindex="4">
+        <span id="verifyLabel">Verify &amp; Continue</span>
+      </button>
+    </form>
+
+  </div>
+
+  <p style="font-size:11.5px;color:var(--text-lo);text-align:center;margin:22px 0 0;">
+    Protected by encrypted, one-time codes — no passwords stored.
+  </p>
+
+</main>
+
+<script>
+  // ============================================================
+  // CONFIG — must match your running FastAPI backend.
+  // ============================================================
+  const API_BASE_URL = "http://127.0.0.1:8000";
+
+  // ============================================================
+  // REAL API — calls your FastAPI backend's OTP endpoints.
+  // Both return Promises with the exact same shape the rest of this
+  // file expects: resolve() on success, reject(new Error(message)) on failure.
+  // ============================================================
+  async function sendOtp(email) {
+    const response = await fetch(`${API_BASE_URL}/api/auth/send-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data.detail || `Server responded with ${response.status}`);
+    }
+
+    return data;
+  }
+
+  async function verifyOtp(email, otp) {
+    const response = await fetch(`${API_BASE_URL}/api/auth/verify-otp`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, otp }),
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data.detail || `Server responded with ${response.status}`);
+    }
+
+    // Keep the session token around for index.html to use once it's wired
+    // up to check auth (e.g. sessionStorage.getItem("giai_token")).
+    if (data.token) {
+      sessionStorage.setItem("giai_token", data.token);
+    }
+
+    return data;
+  }
+
+  // ============================================================
+  // STATE
+  // ============================================================
+  const state = {
+    mode: "signin",       // "signin" | "signup"
+    email: "",
+    resendSeconds: 60,
+    resendIntervalId: null,
+  };
+
+  const els = {
+    modeToggle: document.getElementById("modeToggle"),
+    tabSignin: document.getElementById("tabSignin"),
+    tabSignup: document.getElementById("tabSignup"),
+    modeSubtitle: document.getElementById("modeSubtitle"),
+
+    stepEmail: document.getElementById("stepEmail"),
+    stepOtp: document.getElementById("stepOtp"),
+    emailInput: document.getElementById("emailInput"),
+    emailError: document.getElementById("emailError"),
+    sendOtpBtn: document.getElementById("sendOtpBtn"),
+    sendOtpLabel: document.getElementById("sendOtpLabel"),
+
+    otpEmailDisplay: document.getElementById("otpEmailDisplay"),
+    editEmailBtn: document.getElementById("editEmailBtn"),
+    otpRow: document.getElementById("otpRow"),
+    otpBoxes: Array.from(document.querySelectorAll(".otp-box")),
+    otpError: document.getElementById("otpError"),
+    resendIdle: document.getElementById("resendIdle"),
+    resendTimer: document.getElementById("resendTimer"),
+    resendBtn: document.getElementById("resendBtn"),
+    verifyBtn: document.getElementById("verifyBtn"),
+    verifyLabel: document.getElementById("verifyLabel"),
+
+    toastRegion: document.getElementById("toastRegion"),
+  };
+
+  // ============================================================
+  // MODE SWITCH (Sign In / Sign Up)
+  // ============================================================
+  function setMode(mode) {
+    state.mode = mode;
+    els.modeToggle.setAttribute("data-mode", mode);
+    els.tabSignin.setAttribute("aria-selected", mode === "signin");
+    els.tabSignup.setAttribute("aria-selected", mode === "signup");
+    els.modeSubtitle.textContent = mode === "signin"
+      ? "Sign in to view your saved risk reports."
+      : "Create an account to save and revisit your risk reports.";
+    els.sendOtpLabel.textContent = "Send OTP";
+    els.verifyLabel.textContent = mode === "signin" ? "Verify & Continue" : "Verify & Create Account";
+    goToStep("email");
+  }
+
+  // ============================================================
+  // STEP TRANSITIONS
+  // ============================================================
+  function goToStep(step) {
+    const showingOtp = step === "otp";
+
+    els.stepEmail.setAttribute("data-active", String(!showingOtp));
+    els.stepOtp.setAttribute("data-active", String(showingOtp));
+
+    if (showingOtp) {
+      els.stepEmail.style.position = "absolute";
+      els.stepOtp.style.position = "static";
+      els.stepOtp.classList.remove("step-enter-right");
+      els.stepOtp.classList.add("step-enter-right");
+      requestAnimationFrame(() => {
+        els.stepOtp.classList.remove("step-enter-right");
+        els.stepOtp.classList.add("step-settled");
+      });
+      setTimeout(() => els.otpBoxes[0].focus(), 260);
+    } else {
+      els.stepOtp.style.position = "absolute";
+      els.stepEmail.style.position = "static";
+      els.stepEmail.classList.remove("step-enter-left");
+      els.stepEmail.classList.add("step-enter-left");
+      requestAnimationFrame(() => {
+        els.stepEmail.classList.remove("step-enter-left");
+        els.stepEmail.classList.add("step-settled");
+      });
+      clearInterval(state.resendIntervalId);
+    }
+  }
+
+  // ============================================================
+  // TOASTS
+  // ============================================================
+  function showToast(message, kind = "success") {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.setAttribute("data-kind", kind);
+    toast.innerHTML = `<span class="dot"></span><span>${message}</span>`;
+    els.toastRegion.appendChild(toast);
+    setTimeout(() => {
+      toast.classList.add("leaving");
+      setTimeout(() => toast.remove(), 220);
+    }, 3400);
+  }
+
+  // ============================================================
+  // EMAIL VALIDATION
+  // ============================================================
+  function isValidEmail(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+  }
+
+  els.emailInput.addEventListener("input", () => {
+    if (els.emailInput.dataset.invalid === "true" && isValidEmail(els.emailInput.value)) {
+      els.emailInput.dataset.invalid = "false";
+      els.emailError.textContent = "";
+    }
+  });
+
+  function setButtonLoading(btn, labelEl, isLoading, loadingText, restText) {
+    btn.disabled = isLoading;
+    labelEl.innerHTML = isLoading
+      ? `<span class="spinner"></span><span>${loadingText}</span>`
+      : restText;
+  }
+
+  // ============================================================
+  // STEP 1 SUBMIT → send OTP
+  // ============================================================
+  els.stepEmail.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = els.emailInput.value.trim();
+
+    if (!isValidEmail(email)) {
+      els.emailInput.dataset.invalid = "true";
+      els.emailError.textContent = "Enter a valid email address.";
+      els.emailInput.focus();
+      return;
+    }
+
+    els.emailInput.dataset.invalid = "false";
+    els.emailError.textContent = "";
+    state.email = email;
+
+    setButtonLoading(els.sendOtpBtn, els.sendOtpLabel, true, "Sending…", "Send OTP");
+
+    try {
+      const result = await sendOtp(email);
+      els.otpEmailDisplay.textContent = email;
+      otpClear();
+      goToStep("otp");
+      startResendCountdown();
+      showToast(
+        result.dev_mode ? result.message : `Code sent to ${email}`,
+        "success"
+      );
+    } catch (err) {
+      showToast(err.message || "Couldn't send the code.", "error");
+    } finally {
+      setButtonLoading(els.sendOtpBtn, els.sendOtpLabel, false, "", "Send OTP");
+    }
+  });
+
+  // ============================================================
+  // EDIT EMAIL → back to step 1
+  // ============================================================
+  els.editEmailBtn.addEventListener("click", () => {
+    goToStep("email");
+    setTimeout(() => els.emailInput.focus(), 260);
+  });
+
+  // ============================================================
+  // OTP INPUT BEHAVIOR (auto-advance, backspace, paste)
+  // ============================================================
+  function otpClear() {
+    els.otpBoxes.forEach(box => (box.value = ""));
+    els.otpRow.setAttribute("data-invalid", "false");
+    els.otpError.textContent = "";
+  }
+
+  function currentOtpValue() {
+    return els.otpBoxes.map(b => b.value).join("");
+  }
+
+  els.otpBoxes.forEach((box, idx) => {
+    box.addEventListener("input", () => {
+      box.value = box.value.replace(/[^0-9]/g, "").slice(-1);
+      if (box.value && idx < els.otpBoxes.length - 1) {
+        els.otpBoxes[idx + 1].focus();
+      }
+      if (els.otpRow.getAttribute("data-invalid") === "true") {
+        els.otpRow.setAttribute("data-invalid", "false");
+        els.otpError.textContent = "";
+      }
+      if (currentOtpValue().length === 6) {
+        els.stepOtp.requestSubmit();
+      }
+    });
+
+    box.addEventListener("keydown", (e) => {
+      if (e.key === "Backspace" && !box.value && idx > 0) {
+        els.otpBoxes[idx - 1].focus();
+        els.otpBoxes[idx - 1].value = "";
+      }
+      if (e.key === "ArrowLeft" && idx > 0) els.otpBoxes[idx - 1].focus();
+      if (e.key === "ArrowRight" && idx < els.otpBoxes.length - 1) els.otpBoxes[idx + 1].focus();
+    });
+
+    box.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const digits = (e.clipboardData.getData("text") || "").replace(/[^0-9]/g, "").slice(0, 6).split("");
+      digits.forEach((d, i) => { if (els.otpBoxes[i]) els.otpBoxes[i].value = d; });
+      const nextEmpty = els.otpBoxes.findIndex(b => !b.value);
+      (nextEmpty === -1 ? els.otpBoxes[5] : els.otpBoxes[nextEmpty]).focus();
+      if (digits.length === 6) els.stepOtp.requestSubmit();
+    });
+  });
+
+  // ============================================================
+  // RESEND COUNTDOWN
+  // ============================================================
+  function startResendCountdown() {
+    state.resendSeconds = 60;
+    els.resendIdle.style.display = "inline";
+    els.resendBtn.style.display = "none";
+    updateResendLabel();
+
+    clearInterval(state.resendIntervalId);
+    state.resendIntervalId = setInterval(() => {
+      state.resendSeconds -= 1;
+      updateResendLabel();
+      if (state.resendSeconds <= 0) {
+        clearInterval(state.resendIntervalId);
+        els.resendIdle.style.display = "none";
+        els.resendBtn.style.display = "inline";
+      }
+    }, 1000);
+  }
+
+  function updateResendLabel() {
+    const m = Math.floor(state.resendSeconds / 60);
+    const s = String(state.resendSeconds % 60).padStart(2, "0");
+    els.resendTimer.textContent = `${m}:${s}`;
+  }
+
+  els.resendBtn.addEventListener("click", async () => {
+    els.resendBtn.disabled = true;
+    try {
+      const result = await sendOtp(state.email);
+      showToast(
+        result.dev_mode ? result.message : `New code sent to ${state.email}`,
+        "success"
+      );
+      otpClear();
+      els.otpBoxes[0].focus();
+      startResendCountdown();
+    } catch (err) {
+      showToast(err.message || "Couldn't resend the code.", "error");
+    } finally {
+      els.resendBtn.disabled = false;
+    }
+  });
+
+  // ============================================================
+  // STEP 2 SUBMIT → verify OTP
+  // ============================================================
+  els.stepOtp.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const otp = currentOtpValue();
+
+    if (otp.length !== 6) {
+      els.otpRow.setAttribute("data-invalid", "true");
+      els.otpError.textContent = "Enter all 6 digits.";
+      return;
+    }
+
+    setButtonLoading(els.verifyBtn, els.verifyLabel, true, "Verifying…",
+      state.mode === "signin" ? "Verify & Continue" : "Verify & Create Account");
+
+    try {
+      await verifyOtp(state.email, otp);
+      showToast(state.mode === "signin" ? "Signed in successfully." : "Account created successfully.", "success");
+      // Send the visitor into the app once they're verified.
+      setTimeout(() => { window.location.href = "index.html"; }, 900);
+    } catch (err) {
+      els.otpRow.setAttribute("data-invalid", "true");
+      els.otpError.textContent = err.message || "Invalid OTP.";
+      showToast(err.message || "Invalid OTP.", "error");
+      otpClear();
+      els.otpBoxes[0].focus();
+    } finally {
+      setButtonLoading(els.verifyBtn, els.verifyLabel, false, "",
+        state.mode === "signin" ? "Verify & Continue" : "Verify & Create Account");
+    }
+  });
+</script>
+</body>
+</html>
